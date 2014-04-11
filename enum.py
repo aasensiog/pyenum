@@ -1,4 +1,3 @@
-
 from collections import namedtuple
 
 class CustomNamedTuple(namedtuple('Enumeration', 'id short desc')):
@@ -12,20 +11,12 @@ class Enum(object):
 	def choices(self):
 		d = self.__dict__
 		return tuple([(d[x].id, d[x].desc) for x in [y for y in d if not y.startswith('__')]])
-"""
-USAGE:
 
-class Color(Enum):
-	RED = CustomNamedTuple('R', 'Red', 'Red color')
-	BLUE = CustomNamedTuple('B', 'Blue', 'Blue color')
+	@classmethod
+	def valid_values(self):
+		d = self.__dict__
+		return [d[x].id for x in [y for y in d if not y.startswith('__')]]
 
-if __name__ == '__main__':
-
-	print 'B' in [Color.BLUE, Color.BLUE.id] 	# True
-	print 'R' == Color.RED 						# True
-	print 'G' in (Color.BLUE,) 					# False
-	print 'B' in (Color.BLUE.id,) 			    # True
-
-	print 'Convert to Model choices (tuple of tuples):'
-	print Color.choices()
-"""
+	@classmethod
+	def is_valid(self, value):
+		return value in self.valid_values()
